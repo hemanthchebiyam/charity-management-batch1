@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCMS – Batch 1 Schedule @ Badruka College</title>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #f4f1ec;
+      padding: 24px 16px 48px;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #7b2d2d 0%, #c0572b 100%);
+      color: #fff;
+      padding: 28px 32px 20px;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    header .sub {
+      margin-top: 6px;
+      font-size: 13px;
+      opacity: .85;
+    }
+    header .note-pill {
+      display: inline-block;
+      margin-top: 10px;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    /* ── Section headings ── */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7b2d2d;
+      padding: 18px 32px 8px;
+      border-bottom: 2px solid #f0e8df;
+    }
+
+    /* ── Schedule table ── */
+    .tbl-wrap { padding: 0 24px 24px; overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 12.5px;
+    }
+
+    thead tr {
+      background: #4a1c1c;
+      color: #fff;
+    }
+    thead th {
+      padding: 10px 10px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 11.5px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+
+    tbody tr { border-bottom: 1px solid #ede8e0; }
+    tbody tr:hover { background: #fdf7f1; }
+
+    tbody td {
+      padding: 9px 10px;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    /* Row types */
+    tr.holiday {
+      background: #fff8ed;
+      color: #7a5c1e;
+      font-style: italic;
+    }
+    tr.holiday td { color: #7a5c1e; }
+
+    tr.intro   td:first-child,
+    tr.intro   td:nth-child(4) { color: #1a5276; font-weight: 600; }
+
+    tr.exam    { background: #f0f4ff; }
+    tr.exam    td:nth-child(4) { color: #1a3a6e; font-weight: 700; }
+
+    tr.field   { background: #f0fff4; }
+    tr.field   td:nth-child(4) { color: #1a5c2e; font-weight: 700; }
+
+    /* Chapter colour bands */
+    tr.ch1  td:nth-child(4) { color: #5d3b8c; font-weight: 600; }
+    tr.ch2  td:nth-child(4) { color: #1a6e6e; font-weight: 600; }
+    tr.ch3  td:nth-child(4) { color: #6e3a1a; font-weight: 600; }
+    tr.ch4  td:nth-child(4) { color: #1a5226; font-weight: 600; }
+    tr.ch5  td:nth-child(4) { color: #6e1a4f; font-weight: 600; }
+    tr.ch6  td:nth-child(4) { color: #1a3a6e; font-weight: 600; }
+
+    .badge {
+      display: inline-block;
+      background: #7b2d2d;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 7px;
+      white-space: nowrap;
+    }
+    .badge.holiday-badge {
+      background: #c8921a;
+    }
+    .badge.exam-badge   { background: #1a3a6e; }
+    .badge.field-badge  { background: #1a5c2e; }
+
+    .week-num {
+      font-size: 11px;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    .comments {
+      color: #444;
+      font-size: 11.5px;
+    }
+
+    /* ── Summary box ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      padding: 16px 32px 28px;
+    }
+    .sum-card {
+      border: 1px solid #e8dfd4;
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fdfaf7;
+    }
+    .sum-card .label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #888;
+      font-weight: 700;
+    }
+    .sum-card .value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #7b2d2d;
+      margin-top: 4px;
+    }
+    .sum-card .unit {
+      font-size: 11.5px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    /* ── Breakdown table ── */
+    .breakdown-wrap { padding: 0 32px 24px; }
+    .breakdown-wrap table { font-size: 12px; }
+    .breakdown-wrap thead tr { background: #4a1c1c; }
+    .breakdown-wrap tbody tr:nth-child(odd) { background: #fdfaf7; }
+    .breakdown-wrap tbody td { padding: 8px 10px; }
+
+    /* ── Notes ── */
+    .notes-section { padding: 0 32px 32px; }
+    .notes-section h2 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7b2d2d;
+      margin-bottom: 10px;
+    }
+    .notes-section ol {
+      padding-left: 20px;
+      color: #333;
+      line-height: 1.7;
+      font-size: 12.5px;
+    }
+    .notes-section ol li { margin-bottom: 6px; }
+
+    /* ── Footer ── */
+    footer {
+      background: #4a1c1c;
+      color: rgba(255,255,255,.7);
+      text-align: center;
+      font-size: 11px;
+      padding: 12px;
+    }
+
+    /* ── Mobile (card layout for the schedule table) ── */
+    @media (max-width: 720px) {
+      body { padding: 14px 10px 28px; font-size: 12.5px; }
+
+      header { padding: 20px 16px 14px; }
+      header h1 { font-size: 18px; line-height: 1.15; }
+
+      .section-title { padding: 14px 16px 8px; }
+      .summary-grid { padding: 12px 16px 18px; gap: 10px; }
+      .sum-card { padding: 12px 14px; }
+      .sum-card .value { font-size: 18px; }
+
+      /* Table becomes a list of cards */
+      .tbl-wrap { padding: 0 10px 18px; overflow: visible; }
+      .tbl-wrap table { margin-top: 10px; }
+      .tbl-wrap thead { display: none; }
+
+      .tbl-wrap tbody,
+      .tbl-wrap tr,
+      .tbl-wrap td {
+        display: block;
+        width: 100%;
+      }
+
+      .tbl-wrap tbody tr {
+        border: 1px solid #ede8e0;
+        border-radius: 12px;
+        margin: 12px 0;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+      }
+
+      .tbl-wrap tbody tr:hover { background: #fff; }
+
+      .tbl-wrap tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #f0e8df;
+        line-height: 1.4;
+      }
+      .tbl-wrap tbody td:last-child { border-bottom: 0; }
+
+      /* Hide row number; week/date already establish order */
+      .tbl-wrap tbody td:nth-child(1) { display: none; }
+
+      /* Label/value layout per field */
+      .tbl-wrap tbody td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .tbl-wrap tbody td::before {
+        flex: 0 0 96px;
+        max-width: 96px;
+        content: "";
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+        color: #7b2d2d;
+        font-weight: 800;
+        opacity: .9;
+        padding-top: 2px;
+      }
+
+      .tbl-wrap tbody td:nth-child(2)::before { content: "Week"; }
+      .tbl-wrap tbody td:nth-child(3)::before { content: "Date"; }
+      .tbl-wrap tbody td:nth-child(4)::before { content: "Topic"; }
+      .tbl-wrap tbody td:nth-child(5)::before { content: "Session"; }
+      .tbl-wrap tbody td:nth-child(6)::before { content: "Author"; }
+      .tbl-wrap tbody td:nth-child(7)::before { content: "Tutor"; }
+      .tbl-wrap tbody td:nth-child(8)::before { content: "Notes"; }
+
+      /* Make the value column wrap nicely */
+      .tbl-wrap tbody td > * { max-width: 100%; }
+      .tbl-wrap tbody td { word-break: break-word; }
+
+      /* Preserve row-type emphasis but keep cards clean */
+      tr.holiday { background: #fff8ed; }
+      tr.exam { background: #f0f4ff; }
+      tr.field { background: #f0fff4; }
+
+      /* Other sections */
+      .breakdown-wrap { padding: 0 16px 18px; }
+      .notes-section { padding: 0 16px 22px; }
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; border-radius: 0; }
+      tbody tr:hover { background: inherit; }
+      @page { margin: 1.5cm; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <h1>MCMS &mdash; Batch 1 Schedule</h1>
+    <div class="sub">Badruka College &nbsp;|&nbsp; January 2026 – July 2026</div>
+    <span class="note-pill">📚 Each class session = 2 hours</span>
+  </header>
+
+  <!-- SUMMARY CARDS -->
+  <div class="section-title">Course Overview</div>
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="label">Calendar Weeks</div>
+      <div class="value">27</div>
+      <div class="unit">Total calendar duration</div>
+    </div>
+    <div class="sum-card">
+      <div class="label">Academic Weeks</div>
+      <div class="value">19</div>
+      <div class="unit">Teaching &amp; learning weeks</div>
+    </div>
+    <div class="sum-card">
+      <div class="label">Total Hours</div>
+      <div class="value">40</div>
+      <div class="unit">Across all sessions</div>
+    </div>
+    <div class="sum-card">
+      <div class="label">Chapter Sessions</div>
+      <div class="value">16</div>
+      <div class="unit">Syllabus coverage (32 hrs)</div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE TABLE -->
+  <div class="section-title">Class Schedule</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Week</th>
+          <th>Date</th>
+          <th>Topic</th>
+          <th>Session</th>
+          <th>Original Author</th>
+          <th>Tutor</th>
+          <th>Comments / Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Row 1 – Intro -->
+        <tr class="intro">
+          <td>1</td>
+          <td class="week-num">Wk 1</td>
+          <td><b>Jan 24, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge">Intro</span> Course Introduction</td>
+          <td>—</td>
+          <td>Sri. LV Subramanyam</td>
+          <td>Sri. LV Subramanyam</td>
+          <td class="comments">Introduction to the course, background, and content coverage. <em>1 session × 2 hrs = 2 hrs.</em></td>
+        </tr>
+
+        <!-- Row 2 – Ch1 S1 -->
+        <tr class="ch1">
+          <td>2</td>
+          <td class="week-num">Wk 2</td>
+          <td><b>Jan 31, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#5d3b8c">Ch 1</span> Chapter 1</td>
+          <td>Session 1</td>
+          <td>Sri. Vijaya Raghavacharyulu</td>
+          <td>Sri. Lakshmidhara Sarma</td>
+          <td class="comments">Santana Dharma and significance of rituals. <em>Chapter 1 = 3 sessions × 2 hrs = 6 hrs.</em></td>
+        </tr>
+
+        <!-- Row 3 – Ch1 S2 -->
+        <tr class="ch1">
+          <td>3</td>
+          <td class="week-num">Wk 3</td>
+          <td><b>Feb 7, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#5d3b8c">Ch 1</span> Chapter 1</td>
+          <td>Session 2</td>
+          <td>Sri. Vijaya Raghavacharyulu</td>
+          <td>Sri. Lakshmidhara Sarma</td>
+          <td class="comments">Ritual details, spiritual enlightenment, and nature integration.</td>
+        </tr>
+
+        <!-- Row 4 – Holiday -->
+        <tr class="holiday">
+          <td>4</td>
+          <td class="week-num">—</td>
+          <td><b>Feb 14, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Second Saturday of February – Holiday</td>
+        </tr>
+
+        <!-- Row 5 – Ch1 S3 -->
+        <tr class="ch1">
+          <td>5</td>
+          <td class="week-num">Wk 4</td>
+          <td><b>Feb 21, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#5d3b8c">Ch 1</span> Chapter 1</td>
+          <td>Session 3</td>
+          <td>Sri. Vijaya Raghavacharyulu</td>
+          <td>Sri. Lakshmidhara Sarma</td>
+          <td class="comments">Common rituals and what volunteers should be updated about.</td>
+        </tr>
+
+        <!-- Row 6 – Holiday -->
+        <tr class="holiday">
+          <td>6</td>
+          <td class="week-num">—</td>
+          <td><b>Feb 28, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Badruka College Cultural Function – Holiday</td>
+        </tr>
+
+        <!-- Row 7 – Ch2 S1 -->
+        <tr class="ch2">
+          <td>7</td>
+          <td class="week-num">Wk 5</td>
+          <td><b>Mar 7, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a6e6e">Ch 2</span> Chapter 2</td>
+          <td>Session 1</td>
+          <td>Sri. SivaSankar</td>
+          <td>Sri. SivaSankar</td>
+          <td class="comments">Evolution of Temples, Endowment Dept., Laws Governing Temples. <em>Chapter 2 = 1 session × 2 hrs = 2 hrs.</em></td>
+        </tr>
+
+        <!-- Row 8 – Holiday -->
+        <tr class="holiday">
+          <td>8</td>
+          <td class="week-num">—</td>
+          <td><b>Mar 14, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Second Saturday of March – Holiday</td>
+        </tr>
+
+        <!-- Row 9 – Holiday -->
+        <tr class="holiday">
+          <td>9</td>
+          <td class="week-num">—</td>
+          <td><b>Mar 21, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Badruka College Function – Holiday</td>
+        </tr>
+
+        <!-- Row 10 – Ch3 S1 -->
+        <tr class="ch3">
+          <td>10</td>
+          <td class="week-num">Wk 6</td>
+          <td><b>Mar 28, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e3a1a">Ch 3</span> Chapter 3</td>
+          <td>Session 1</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. KV Subramanyam</td>
+          <td class="comments">Temple Management Activities – Background; General Upkeep; Archakatvam; Nitya Pooja Vidhanam; Veda Parayanam. <em>Chapter 3 = 5 sessions × 2 hrs = 10 hrs.</em></td>
+        </tr>
+
+        <!-- Row 11 – Ch3 S2 -->
+        <tr class="ch3">
+          <td>11</td>
+          <td class="week-num">Wk 7</td>
+          <td><b>Apr 4, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e3a1a">Ch 3</span> Chapter 3</td>
+          <td>Session 2</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. KV Subramanyam</td>
+          <td class="comments">Samskara Rituals &amp; Special Poojas; Uthsavams; Vahana Sevas and Crowd Management; Darsanam Timings; Alaya Maryada (Protocol).</td>
+        </tr>
+
+        <!-- Row 12 – Holiday -->
+        <tr class="holiday">
+          <td>12</td>
+          <td class="week-num">—</td>
+          <td><b>Apr 11, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Second Saturday of April – Holiday</td>
+        </tr>
+
+        <!-- Row 13 – Ch3 S3 -->
+        <tr class="ch3">
+          <td>13</td>
+          <td class="week-num">Wk 8</td>
+          <td><b>Apr 17, 2026</b><br><span style="color:#888;font-size:11px">Friday</span></td>
+          <td><span class="badge" style="background:#6e3a1a">Ch 3</span> Chapter 3</td>
+          <td>Session 3</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. KV Subramanyam</td>
+          <td class="comments">Pakasala &amp; Prasadams; Dharma Pracharam and Dharmic Activities; Temple Jewelry; Temple Security.</td>
+        </tr>
+
+        <!-- Row 14 – Ch3 S4 -->
+        <tr class="ch3">
+          <td>14</td>
+          <td class="week-num">Wk 9</td>
+          <td><b>Apr 25, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e3a1a">Ch 3</span> Chapter 3</td>
+          <td>Session 4</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. KV Subramanyam</td>
+          <td class="comments">Hundi Management; Pilgrim Facilities; Annadanam; Kalyana Katta.</td>
+        </tr>
+
+        <!-- Row 15 – Ch3 S5 -->
+        <tr class="ch3">
+          <td>15</td>
+          <td class="week-num">Wk 10</td>
+          <td><b>May 2, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e3a1a">Ch 3</span> Chapter 3</td>
+          <td>Session 5</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. KV Subramanyam</td>
+          <td class="comments">Development &amp; maintenance of Udyana Vanam; Accounts, Audit and Banking; Staffing, Training, and Volunteer Service; Devasthanam Office and Ticket Counters; Social Audit.</td>
+        </tr>
+
+        <!-- Row 16 – Ch4 S1 (held May 9 at Skandagiri; schedule advanced one week from here) -->
+        <tr class="ch4">
+          <td>16</td>
+          <td class="week-num">Wk 11</td>
+          <td><b>May 9, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a5226">Ch 4</span> Chapter 4</td>
+          <td>Session 1</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. B. Somayajulu</td>
+          <td class="comments">Allied Institutions to Temples. <em>Chapter 4 = 3 sessions × 2 hrs = 6 hrs.</em> Held at Skandagiri Temple Premises.</td>
+        </tr>
+
+        <!-- Row 17 – Ch4 S2 -->
+        <tr class="ch4">
+          <td>17</td>
+          <td class="week-num">Wk 12</td>
+          <td><b>May 16, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a5226">Ch 4</span> Chapter 4</td>
+          <td>Session 2</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. B. Somayajulu</td>
+          <td class="comments">Allied Institutions to Temples.</td>
+        </tr>
+
+        <!-- Row 18 – Ch4 S3 -->
+        <tr class="ch4">
+          <td>18</td>
+          <td class="week-num">Wk 13</td>
+          <td><b>May 23, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a5226">Ch 4</span> Chapter 4</td>
+          <td>Session 3</td>
+          <td>Sri. JSV Prasad</td>
+          <td>Sri. B. Somayajulu</td>
+          <td class="comments">Allied Institutions to Temples.</td>
+        </tr>
+
+        <!-- Row 19 – Ch5 S1 -->
+        <tr class="ch5">
+          <td>19</td>
+          <td class="week-num">Wk 14</td>
+          <td><b>May 30, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e1a4f">Ch 5</span> Chapter 5</td>
+          <td>Session 1</td>
+          <td>TBD</td>
+          <td>Sri. Pradeep Kasthala</td>
+          <td class="comments">Temple Economics. <em>Chapter 5 = 2 sessions × 2 hrs = 4 hrs. (Subject to change.)</em></td>
+        </tr>
+
+        <!-- Row 20 – Ch5 S2 -->
+        <tr class="ch5">
+          <td>20</td>
+          <td class="week-num">Wk 15</td>
+          <td><b>Jun 6, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#6e1a4f">Ch 5</span> Chapter 5</td>
+          <td>Session 2</td>
+          <td>TBD</td>
+          <td>Sri. Pradeep Kasthala</td>
+          <td class="comments">Temple Economics. (Subject to change.)</td>
+        </tr>
+
+        <!-- Row 21 – Holiday -->
+        <tr class="holiday">
+          <td>21</td>
+          <td class="week-num">—</td>
+          <td><b>Jun 13, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Second Saturday of June – Holiday</td>
+        </tr>
+
+        <!-- Row 22 – Ch6 S1 -->
+        <tr class="ch6">
+          <td>22</td>
+          <td class="week-num">Wk 16</td>
+          <td><b>Jun 20, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a3a6e">Ch 6</span> Chapter 6</td>
+          <td>Session 1</td>
+          <td>Sri. LV Subramanyam</td>
+          <td>Sri. Vittal &amp; Sri. Sai Prabhakar</td>
+          <td class="comments">Challenges Facing Hindu Dharmic Institutions. <em>Chapter 6 = 2 sessions × 2 hrs = 4 hrs.</em></td>
+        </tr>
+
+        <!-- Row 23 – Ch6 S2 -->
+        <tr class="ch6">
+          <td>23</td>
+          <td class="week-num">Wk 17</td>
+          <td><b>Jun 27, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge" style="background:#1a3a6e">Ch 6</span> Chapter 6</td>
+          <td>Session 2</td>
+          <td>Sri. LV Subramanyam</td>
+          <td>Sri. Vittal &amp; Sri. Sai Prabhakar</td>
+          <td class="comments">Challenges Facing Hindu Dharmic Institutions.</td>
+        </tr>
+
+        <!-- Row 24 – Final Exam -->
+        <tr class="exam">
+          <td>24</td>
+          <td class="week-num">Wk 18</td>
+          <td><b>Jul 4, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge exam-badge">Exam</span> Final Exam</td>
+          <td>Session 1</td>
+          <td>—</td>
+          <td>Sri. YV Subramanyam, Sri. P Vijay Kumar, Sri. Ravi Chebiyam</td>
+          <td class="comments">Final Exam for 2 hours. Exam format to be decided by Sri. YV Subramanyam and Sri. P Vijay Kumar</td>
+        </tr>
+
+        <!-- Row 25 – Holiday -->
+        <tr class="holiday">
+          <td>25</td>
+          <td class="week-num">—</td>
+          <td><b>Jul 11, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge holiday-badge">Holiday</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="comments">Second Saturday of July – Holiday</td>
+        </tr>
+
+        <!-- Row 26 – Field Visit -->
+        <tr class="field">
+          <td>26</td>
+          <td class="week-num">Wk 19</td>
+          <td><b>Jul 18, 2026</b><br><span style="color:#888;font-size:11px">Saturday</span></td>
+          <td><span class="badge field-badge">Visit</span> Field Visit</td>
+          <td>Session 1</td>
+          <td>Sri. LV Subramanyam</td>
+          <td>Sri. P Vijay Kumar &amp; Sri. Ravi Chebiyam</td>
+          <td class="comments">Field visit to a Temple, Goshala, or Veda Pathashala. Sri. LV Subramanyam or any of the authors to facilitate. Travel time included — approx. 4 hours.</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BREAKDOWN TABLE -->
+  <div class="section-title">Course Hour Breakdown</div>
+  <div class="breakdown-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Sessions</th>
+          <th>Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Course Introduction</td><td>1</td><td>2 hrs</td></tr>
+        <tr><td>Chapter Sessions (syllabus)</td><td>16</td><td>32 hrs</td></tr>
+        <tr><td>Final Exam</td><td>1</td><td>2 hrs</td></tr>
+        <tr><td>Field Visit (travel included)</td><td>1</td><td>4 hrs</td></tr>
+        <tr style="font-weight:700;background:#f0e8df"><td>Course Total</td><td>19</td><td>40 hrs</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NOTES -->
+  <div class="section-title">Important Notes</div>
+  <div class="notes-section">
+    <ol>
+      <li>Study material will be provided for each chapter at the end of the respective sessions.</li>
+      <li>Faculty is requested to plan evaluation (exam and other means) in consultation with Sri. YV Subramanyam at the end of all sessions for that chapter. Sri. Rajasekhar, Sri. Ravi Chebiyam, and Sri. P Vijay Kumar will assist.</li>
+      <li>Faculty is requested to identify practical training requirements based on course content, participant experience, feedback, and wish list.</li>
+      <li>19 weeks of classroom lectures, exam, and field visit are spread over 27 calendar weeks.</li>
+      <li>Field training is currently planned for 1 event of 4 hours; an additional visit can be arranged if needed.</li>
+    </ol>
+  </div>
+
+  <footer>
+    MCMS Batch 1 &mdash; Badruka College &nbsp;|&nbsp; Jan 2026 – Jul 2026 &nbsp;|&nbsp; All sessions on Saturdays unless noted
+  </footer>
+
+</div>
+</body>
+</html>
